@@ -1,0 +1,2 @@
+D:/Projects/pay_off_chart/android/app/.cxx/Debug/23575a4p/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/Projects/pay_off_chart/android/app/.cxx/Debug/23575a4p/armeabi-v7a/CMakeFiles/rebuild_cache.dir
