@@ -40,37 +40,28 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
   bool _isScaleEnabled = true;
   double _currentScale = 5.0;
   Offset _currentPosition = Offset.zero;
-  
-  // Window parameters
-  double _windowStart = 800;
-  double _windowEnd = 1100;
-  double _windowSize = 300;
-  double _step = 5.0;
 
   @override
   void initState() {
     _transformationController = TransformationController();
-      _transformationZoomIn();
+    _transformationZoomIn();
     super.initState();
   }
-
-  @override
-  void dispose() {
-    _transformationController.dispose();
-
-  
-    super.dispose();
-  }
-   void _transformationZoomIn() {
+  void _transformationZoomIn() {
     _transformationController.value *= Matrix4.diagonal3Values(
       1.1,
       1.1,
       1,
     );
   }
+  @override
+  void dispose() {
+    _transformationController.dispose();
+    super.dispose();
+  }
 
   void _handleScaleStart(ScaleStartDetails details) {
-    _currentScale = 5.0;
+    _currentScale = 1.0;
     _currentPosition = details.focalPoint;
   }
 
@@ -95,35 +86,17 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
         0,
       );
       _currentPosition = details.focalPoint;
-      
-      // Update window based on pan position
-      final translation = _transformationController.value.getTranslation();
-      _updateWindow(translation.x);
     }
   }
 
   void _handleScaleEnd(ScaleEndDetails details) {
-    _currentScale = 5.0;
+    _currentScale = 1.0;
   }
 
-  void _updateWindow(double translation) {
-    // Calculate new window based on translation
-    final newStart = _windowStart + translation;
-    final newEnd = newStart + _windowSize;
-
-    // Update window if within bounds
-    if (newStart >= 800 && newEnd <= 2000) {
-      setState(() {
-        _windowStart = newStart;
-        _windowEnd = newEnd;
-      });
-    }
-  }
-
-  // Example payoff data (butterfly spread style) - now windowed
+  // Example payoff data (butterfly spread style)
   List<FlSpot> getPayoffSpots() {
     List<FlSpot> spots = [];
-    for (double price = _windowStart; price <= _windowEnd; price += _step) {
+    for (double price = 800; price <= 2000; price += 5) {
       double payoff;
       if (price < 900) {
         payoff = -2000 + (price - 800) * 2;
@@ -137,11 +110,11 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
     return spots;
   }
 
-  // Example probability curve (normal distribution) - now windowed
+  // Example probability curve (normal distribution)
   List<FlSpot> getProbabilitySpots() {
     List<FlSpot> spots = [];
     double mean = 950, std = 40;
-    for (double price = _windowStart; price <= _windowEnd; price += _step) {
+    for (double price = 800; price <= 1100; price += 5) {
       double y = 3000 * exp(-pow((price - mean) / std, 2) / 2);
       spots.add(FlSpot(price, y));
     }
@@ -155,43 +128,42 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
 
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              const Text('Pan', style: TextStyle(color: Colors.white)),
-              Switch(
-                value: _isPanEnabled,
-                onChanged: (value) {
-                  setState(() {
-                    _isPanEnabled = value;
-                  });
-                },
-              ),
-              const Text('Scale', style: TextStyle(color: Colors.white)),
-              Switch(
-                value: _isScaleEnabled,
-                onChanged: (value) {
-                  setState(() {
-                    _isScaleEnabled = value;
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
-        Row(
-          children: [
-            const Spacer(),
-            _TransformationButtons(controller: _transformationController),
-            const SizedBox(width: 16),
-          ],
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.end,
+        //     children: [
+        //       const Text('Pan', style: TextStyle(color: Colors.white)),
+        //       Switch(
+        //         value: _isPanEnabled,
+        //         onChanged: (value) {
+        //           setState(() {
+        //             _isPanEnabled = value;
+        //           });
+        //         },
+        //       ),
+        //       const Text('Scale', style: TextStyle(color: Colors.white)),
+        //       Switch(
+        //         value: _isScaleEnabled,
+        //         onChanged: (value) {
+        //           setState(() {
+        //             _isScaleEnabled = value;
+        //           });
+        //         },
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        // Row(
+        //   children: [
+        //     const Spacer(),
+        //     _TransformationButtons(controller: _transformationController),
+        //     const SizedBox(width: 16),
+        //   ],
+        // ),
         Expanded(
-          
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(16.0),
             child: GestureDetector(
               onScaleStart: _handleScaleStart,
               onScaleUpdate: _handleScaleUpdate,
@@ -206,8 +178,8 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
                   transformationController: _transformationController,
                 ),
                 LineChartData(
-                  minX: _windowStart,
-                  maxX: _windowEnd,
+                  minX: 800,
+                  maxX: 1100,
                   minY: -3000,
                   maxY: 4000,
                   gridData: FlGridData(
@@ -265,9 +237,8 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
                     LineChartBarData(
                       spots: payoffSpots,
                       isCurved: false,
-                      curveSmoothness: 0,
-                      color: Colors.red,
-                      barWidth: 2,
+                      color: Colors.orange,
+                      barWidth: 3,
                       belowBarData: BarAreaData(
                         show: true,
                         color: Colors.green.withOpacity(0.12),
