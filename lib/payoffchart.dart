@@ -214,13 +214,13 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
                       barWidth: 3,
                       belowBarData: BarAreaData(
                         show: true,
-                        color: Colors.green.withOpacity(0.12),
+                        color: Colors.green,
                         cutOffY: 0,
                         applyCutOffY: true,
                       ),
                       aboveBarData: BarAreaData(
                         show: true,
-                        color: Colors.red.withOpacity(0.12),
+                        color: Colors.red,
                         cutOffY: 0,
                         applyCutOffY: true,
                       ),
@@ -232,6 +232,7 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
                       color: Colors.blue,
                       barWidth: 2,
                       dotData: FlDotData(show: false),
+                      
                     ),
                   ],
                   extraLinesData: ExtraLinesData(
@@ -290,115 +291,115 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
   }
 }
 
-class _TransformationButtons extends StatelessWidget {
-  const _TransformationButtons({
-    required this.controller,
-  });
+// class _TransformationButtons extends StatelessWidget {
+//   const _TransformationButtons({
+//     required this.controller,
+//   });
 
-  final TransformationController controller;
+//   final TransformationController controller;
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Tooltip(
-          message: 'Zoom in',
-          child: IconButton(
-            icon: const Icon(
-              Icons.add,
-              size: 16,
-              color: Colors.white,
-            ),
-            onPressed: _transformationZoomIn,
-          ),
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Tooltip(
-              message: 'Move left',
-              child: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  size: 16,
-                  color: Colors.white,
-                ),
-                onPressed: _transformationMoveLeft,
-              ),
-            ),
-            Tooltip(
-              message: 'Reset zoom',
-              child: IconButton(
-                icon: const Icon(
-                  Icons.refresh,
-                  size: 16,
-                  color: Colors.white,
-                ),
-                onPressed: _transformationReset,
-              ),
-            ),
-            Tooltip(
-              message: 'Move right',
-              child: IconButton(
-                icon: const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                  color: Colors.white,
-                ),
-                onPressed: _transformationMoveRight,
-              ),
-            ),
-          ],
-        ),
-        Tooltip(
-          message: 'Zoom out',
-          child: IconButton(
-            icon: const Icon(
-              Icons.minimize,
-              size: 16,
-              color: Colors.white,
-            ),
-            onPressed: _transformationZoomOut,
-          ),
-        ),
-      ],
-    );
-  }
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: [
+//         Tooltip(
+//           message: 'Zoom in',
+//           child: IconButton(
+//             icon: const Icon(
+//               Icons.add,
+//               size: 16,
+//               color: Colors.white,
+//             ),
+//             onPressed: _transformationZoomIn,
+//           ),
+//         ),
+//         Row(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             Tooltip(
+//               message: 'Move left',
+//               child: IconButton(
+//                 icon: const Icon(
+//                   Icons.arrow_back_ios,
+//                   size: 16,
+//                   color: Colors.white,
+//                 ),
+//                 onPressed: _transformationMoveLeft,
+//               ),
+//             ),
+//             Tooltip(
+//               message: 'Reset zoom',
+//               child: IconButton(
+//                 icon: const Icon(
+//                   Icons.refresh,
+//                   size: 16,
+//                   color: Colors.white,
+//                 ),
+//                 onPressed: _transformationReset,
+//               ),
+//             ),
+//             Tooltip(
+//               message: 'Move right',
+//               child: IconButton(
+//                 icon: const Icon(
+//                   Icons.arrow_forward_ios,
+//                   size: 16,
+//                   color: Colors.white,
+//                 ),
+//                 onPressed: _transformationMoveRight,
+//               ),
+//             ),
+//           ],
+//         ),
+//         Tooltip(
+//           message: 'Zoom out',
+//           child: IconButton(
+//             icon: const Icon(
+//               Icons.minimize,
+//               size: 16,
+//               color: Colors.white,
+//             ),
+//             onPressed: _transformationZoomOut,
+//           ),
+//         ),
+//       ],
+//     );
+//   }
 
-  void _transformationReset() {
-    controller.value = Matrix4.identity();
-  }
+//   void _transformationReset() {
+//     controller.value = Matrix4.identity();
+//   }
 
-  void _transformationZoomIn() {
-    controller.value *= Matrix4.diagonal3Values(
-      1.1,
-      1.1,
-      1,
-    );
-  }
+//   void _transformationZoomIn() {
+//     controller.value *= Matrix4.diagonal3Values(
+//       1.1,
+//       1.1,
+//       1,
+//     );
+//   }
 
-  void _transformationMoveLeft() {
-    controller.value *= Matrix4.translationValues(
-      20,
-      0,
-      0,
-    );
-  }
+//   void _transformationMoveLeft() {
+//     controller.value *= Matrix4.translationValues(
+//       20,
+//       0,
+//       0,
+//     );
+//   }
 
-  void _transformationMoveRight() {
-    controller.value *= Matrix4.translationValues(
-      -20,
-      0,
-      0,
-    );
-  }
+//   void _transformationMoveRight() {
+//     controller.value *= Matrix4.translationValues(
+//       -20,
+//       0,
+//       0,
+//     );
+//   }
 
-  void _transformationZoomOut() {
-    controller.value *= Matrix4.diagonal3Values(
-      0.9,
-      0.9,
-      1,
-    );
-  }
-}
+//   void _transformationZoomOut() {
+//     controller.value *= Matrix4.diagonal3Values(
+//       0.9,
+//       0.9,
+//       1,
+//     );
+//   }
+// }
 

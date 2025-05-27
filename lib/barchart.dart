@@ -195,25 +195,10 @@ class _OptionOIBarChartState extends State<OptionOIBarChart> {
   }
 }
 
-class _LegendDot extends StatelessWidget {
-  final Color color;
-  const _LegendDot({required this.color});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 14,
-      height: 14,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
-    );
-  }
-}
 
 // Example usage with dummy data
 class OptionOIBarChartDemo extends StatelessWidget {
-  const OptionOIBarChartDemo({Key? key}) : super(key: key);
+  const OptionOIBarChartDemo({super.key});
 
   @override
   Widget build(BuildContext context) {
