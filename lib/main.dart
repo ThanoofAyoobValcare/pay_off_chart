@@ -16,10 +16,10 @@ class Charts extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Custom Payoff Chart',
-            style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.black87,
+            style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.white,
       ),
-      backgroundColor:  Colors.black,
+      backgroundColor:  Colors.white,
       body: Center(
         child: CustomPayoffChart()
       ),

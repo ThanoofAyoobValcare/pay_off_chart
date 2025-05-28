@@ -1,6 +1,7 @@
 import 'dart:math';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:pay_off_chart/package/flip_charts.dart';
+
 class CustomPayoffChart extends StatefulWidget {
   const CustomPayoffChart({super.key});
 
@@ -10,7 +11,7 @@ class CustomPayoffChart extends StatefulWidget {
 
 class _CustomPayoffChartState extends State<CustomPayoffChart> {
   late TransformationController _transformationController;
- 
+
   double _currentScale = 5.0;
   Offset _currentPosition = Offset.zero;
 
@@ -20,6 +21,7 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
     _transformationZoomIn();
     super.initState();
   }
+
   void _transformationZoomIn() {
     _transformationController.value *= Matrix4.diagonal3Values(
       1.1,
@@ -27,6 +29,7 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
       1,
     );
   }
+
   @override
   void dispose() {
     _transformationController.dispose();
@@ -40,25 +43,25 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
 
   void _handleScaleUpdate(ScaleUpdateDetails details) {
     // if (_isScaleEnabled) {
-      final newScale = _currentScale * details.scale;
-      if (newScale >= 1.0 && newScale <= 25.0) {
-        _transformationController.value *= Matrix4.diagonal3Values(
-          details.scale,
-          details.scale,
-          1,
-        );
-        _currentScale = newScale;
+    final newScale = _currentScale * details.scale;
+    if (newScale >= 1.0 && newScale <= 25.0) {
+      _transformationController.value *= Matrix4.diagonal3Values(
+        details.scale,
+        details.scale,
+        1,
+      );
+      _currentScale = newScale;
       // }
     }
 
     // if (_isPanEnabled) {
-      final delta = details.focalPoint - _currentPosition;
-      _transformationController.value *= Matrix4.translationValues(
-        delta.dx,
-        delta.dy,
-        0,
-      );
-      _currentPosition = details.focalPoint;
+    final delta = details.focalPoint - _currentPosition;
+    _transformationController.value *= Matrix4.translationValues(
+      delta.dx,
+      delta.dy,
+      0,
+    );
+    _currentPosition = details.focalPoint;
     // }
   }
 
@@ -159,11 +162,11 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
                     show: true,
                     drawVerticalLine: true,
                     getDrawingHorizontalLine: (_) => FlLine(
-                      color: Colors.white24,
+                      color: Colors.black12,
                       strokeWidth: 1,
                     ),
                     getDrawingVerticalLine: (_) => FlLine(
-                      color: Colors.white24,
+                      color: Colors.black12,
                       strokeWidth: 1,
                     ),
                   ),
@@ -173,7 +176,9 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
                         showTitles: true,
                         interval: 1000,
                         getTitlesWidget: (value, meta) => Text(
-                          value > 0 ? '+${value ~/ 1000}K' : '${value ~/ 1000}K',
+                          value > 0
+                              ? '+${value ~/ 1000}K'
+                              : '${value ~/ 1000}K',
                           style: TextStyle(
                             color: value >= 0 ? Colors.green : Colors.red,
                             fontWeight: FontWeight.bold,
@@ -190,7 +195,7 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
                           value.toInt().toString(),
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: Colors.black,
                           ),
                         ),
                       ),
@@ -204,7 +209,17 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
                   ),
                   borderData: FlBorderData(
                     show: true,
-                    border: Border.all(color: Colors.white24),
+                    border: Border(
+                      left: BorderSide(
+                        color: Colors.black, // or any color you want
+                        width: 1,
+                      ),
+                      bottom: BorderSide(
+                        color: Colors.black, // or any color you want
+                        width: 1,
+                      ),
+                      // Do not specify top or right, so they will not be drawn
+                    ),
                   ),
                   lineBarsData: [
                     LineChartBarData(
@@ -232,7 +247,6 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
                       color: Colors.blue,
                       barWidth: 2,
                       dotData: FlDotData(show: false),
-                      
                     ),
                   ],
                   extraLinesData: ExtraLinesData(
@@ -240,8 +254,19 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
                       VerticalLine(
                         x: 900,
                         color: Colors.orange,
-                        strokeWidth: 2,
+                        strokeWidth: 1,
                         dashArray: [5, 5],
+                        label: VerticalLineLabel(
+                          show: true,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12,
+                          ),
+                          alignment: Alignment.topCenter,
+                          // padding: EdgeInsets.symmetric(horizontal: 0, vertical: 4), // Padding inside the label
+                          direction: LabelDirection.vertical,
+                          labelResolver: (line) => line.color == Colors.orange ? 'SD1' : '',
+                        ),
                       ),
                       VerticalLine(
                         x: 1000,
@@ -402,4 +427,3 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
 //     );
 //   }
 // }
-
