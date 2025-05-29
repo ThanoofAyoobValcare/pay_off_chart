@@ -252,20 +252,23 @@ class _CustomPayoffChartState extends State<CustomPayoffChart> {
                   extraLinesData: ExtraLinesData(
                     verticalLines: [
                       VerticalLine(
-                        x: 900,
-                        color: Colors.orange,
+                        x: 925,
+                        color: Colors.black,
                         strokeWidth: 1,
                         dashArray: [5, 5],
                         label: VerticalLineLabel(
                           show: true,
+                          isCustom: true,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 12,
                           ),
                           alignment: Alignment.topCenter,
                           // padding: EdgeInsets.symmetric(horizontal: 0, vertical: 4), // Padding inside the label
-                          direction: LabelDirection.vertical,
-                          labelResolver: (line) => line.color == Colors.orange ? 'SD1' : '',
+                          direction: LabelDirection.horizontal,
+                          labelResolver: (line) =>
+                               'SD1' ,
+                          
                         ),
                       ),
                       VerticalLine(

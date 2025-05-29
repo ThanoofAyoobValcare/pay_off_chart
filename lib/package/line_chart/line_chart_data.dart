@@ -827,6 +827,7 @@ abstract class FlLineLabel with EquatableMixin {
     required this.style,
     required this.alignment,
     required this.direction,
+    required this.isCustom,
   });
 
   /// Determines showing label or not.
@@ -843,6 +844,8 @@ abstract class FlLineLabel with EquatableMixin {
 
   /// Determines the direction of the text.
   final LabelDirection direction;
+
+  final bool isCustom;
 
   /// Used for equality check, see [EquatableMixin].
   @override

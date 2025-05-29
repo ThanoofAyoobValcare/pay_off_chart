@@ -1235,6 +1235,7 @@ class HorizontalLineLabel extends FlLineLabel with EquatableMixin {
     super.style,
     super.alignment = Alignment.topLeft,
     super.show = false,
+    super.isCustom = false,
     super.direction = LabelDirection.horizontal,
     this.labelResolver = HorizontalLineLabel.defaultLineLabelResolver,
   });
@@ -1295,12 +1296,15 @@ class VerticalLineLabel extends FlLineLabel with EquatableMixin {
     ),
     super.alignment = Alignment.bottomRight,
     super.show = false,
+    super.isCustom = false,
     super.direction = LabelDirection.horizontal,
     this.labelResolver = VerticalLineLabel.defaultLineLabelResolver,
+
   });
 
   /// Resolves a label for showing.
   final String Function(VerticalLine) labelResolver;
+
 
   /// Returns the [VerticalLine.x] as the drawing label.
   static String defaultLineLabelResolver(VerticalLine line) =>
@@ -2283,6 +2287,8 @@ class AxisLinesIndicatorPainter extends AxisSpotIndicatorPainter {
   ) {
     final viewSize = canvasWrapper.size;
 
+    
+
     _linePaint
       ..setColorOrGradientForLine(
         line.color,
@@ -2328,6 +2334,8 @@ class AxisLinesIndicatorPainter extends AxisSpotIndicatorPainter {
     }
 
     if (line.label.show) {
+
+    
       final label = line.label;
       final style =
           TextStyle(fontSize: 11, color: line.color).merge(label.style);

@@ -1,5 +1,3 @@
-
-
 import 'package:pay_off_chart/package/base/axis_chart/axis_chart_data.dart';
 import 'package:pay_off_chart/package/base/axis_chart/axis_chart_helper.dart';
 import 'package:pay_off_chart/package/base/base_chart/base_chart_data.dart';
@@ -412,47 +410,119 @@ abstract class AxisChartPainter<D extends AxisChartData>
           );
         }
 
-        if (line.label.show) {
+        if (line.label.show && line.label.isCustom) {
           final label = line.label;
-          final style =
-              TextStyle(fontSize: 11, color: line.color).merge(label.style);
-          final padding = label.padding as EdgeInsets;
+          final style = TextStyle(
+            fontSize: 2,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ).merge(label.style);
+          final padding = label.padding as EdgeInsets? ??
+              EdgeInsets.symmetric(horizontal: 8, vertical: 4);
 
+          // 1. Layout the text
           final span = TextSpan(
             text: label.labelResolver(line),
-            style: Utils().getThemeAwareTextStyle(context, style),
+            style: style,
           );
-
           final tp = TextPainter(
             text: span,
             textDirection: TextDirection.ltr,
           )..layout();
 
-          switch (label.direction) {
-            case LabelDirection.horizontal:
-              canvasWrapper.drawText(
-                tp,
-                label.alignment.withinRect(
-                  Rect.fromLTRB(
-                    from.dx - padding.right - tp.width,
-                    from.dy + padding.top,
-                    to.dx + padding.left,
-                    to.dy - padding.bottom - tp.height,
+          // 2. Calculate the label's size (vertical)
+          final labelWidth = tp.height + padding.top + padding.bottom;
+          final labelHeight = tp.width + padding.left + padding.right;
+
+          // 3. Position: bottom center of label at from.dy (top of the line)
+          final labelLeft = from.dx - labelWidth / 2;
+          final labelTop = from.dy - labelHeight + 25;
+          final labelRect =
+              Rect.fromLTWH(labelLeft, labelTop, labelWidth, labelHeight);
+
+          // 4. Draw the dashed line up to the label
+          final dashPaint = Paint()
+            ..color = line.color ?? Colors.grey
+            ..strokeWidth = line.strokeWidth
+            ..style = PaintingStyle.stroke;
+          double dashHeight = 6, dashSpace = 4;
+          double startY = from.dy;
+          while (startY < to.dy - labelHeight) {
+            final endY = (startY + dashHeight > to.dy - labelHeight)
+                ? to.dy - labelHeight
+                : startY + dashHeight;
+            canvasWrapper.canvas.drawLine(
+              Offset(from.dx, startY),
+              Offset(from.dx, endY),
+              dashPaint,
+            );
+            startY = endY + dashSpace;
+          }
+
+          // 5. Draw the rounded rectangle background for the label
+          final rrect = RRect.fromRectAndRadius(
+              labelRect, Radius.circular(4));
+          final bgPaint = Paint()..color = Color(0xFFD0D6DE); // light blue/gray
+          canvasWrapper.canvas.drawRRect(rrect, bgPaint);
+
+          // 6. Draw the vertical text (rotated)
+          canvasWrapper.canvas.save();
+          // Move to the center of the label rect, then rotate
+          canvasWrapper.canvas.translate(
+            labelLeft + labelWidth / 2,
+            labelTop + labelHeight / 2,
+          );
+          canvasWrapper.canvas.rotate(-3.14159 / 2); // -90 degrees
+
+          // Draw text centered
+          tp.paint(
+            canvasWrapper.canvas,
+            Offset(-tp.width / 2, -tp.height / 2),
+          );
+          canvasWrapper.canvas.restore();
+        } else {
+          if (line.label.show) {
+            final label = line.label;
+            final style =
+                TextStyle(fontSize: 11, color: line.color).merge(label.style);
+            final padding = label.padding as EdgeInsets;
+
+            final span = TextSpan(
+              text: label.labelResolver(line),
+              style: Utils().getThemeAwareTextStyle(context, style),
+            );
+
+            final tp = TextPainter(
+              text: span,
+              textDirection: TextDirection.ltr,
+            )..layout();
+
+            switch (label.direction) {
+              case LabelDirection.horizontal:
+                canvasWrapper.drawText(
+                  tp,
+                  label.alignment.withinRect(
+                    Rect.fromLTRB(
+                      from.dx - padding.right - tp.width,
+                      from.dy + padding.top,
+                      to.dx + padding.left,
+                      to.dy - padding.bottom - tp.height,
+                    ),
                   ),
-                ),
-              );
-            case LabelDirection.vertical:
-              canvasWrapper.drawVerticalText(
-                tp,
-                label.alignment.withinRect(
-                  Rect.fromLTRB(
-                    from.dx - padding.right,
-                    from.dy + padding.top,
-                    to.dx + padding.left + tp.height,
-                    to.dy - padding.bottom - tp.width,
+                );
+              case LabelDirection.vertical:
+                canvasWrapper.drawVerticalText(
+                  tp,
+                  label.alignment.withinRect(
+                    Rect.fromLTRB(
+                      from.dx - padding.right,
+                      from.dy + padding.top,
+                      to.dx + padding.left + tp.height,
+                      to.dy - padding.bottom - tp.width,
+                    ),
                   ),
-                ),
-              );
+                );
+            }
           }
         }
       }
